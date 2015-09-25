@@ -1,0 +1,130 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .DS_Store
+* .gitignore
+* LICENSE
+* README.md
+* SimpleNet_Demo\
+* SimpleNet_Demo\.classpath
+* SimpleNet_Demo\.project
+* SimpleNet_Demo\.settings\
+* SimpleNet_Demo\.settings\org.eclipse.jdt.core.prefs
+* SimpleNet_Demo\AndroidManifest.xml
+* SimpleNet_Demo\bin\
+* SimpleNet_Demo\bin\AndroidManifest.xml
+* SimpleNet_Demo\bin\R.txt
+* SimpleNet_Demo\gen\
+* SimpleNet_Demo\gen\com\
+* SimpleNet_Demo\gen\com\example\
+* SimpleNet_Demo\gen\com\example\simplenet_demo\
+* SimpleNet_Demo\gen\com\example\simplenet_demo\BuildConfig.java
+* SimpleNet_Demo\gen\com\example\simplenet_demo\R.java
+* SimpleNet_Demo\ic_launcher-web.png
+* SimpleNet_Demo\proguard-project.txt
+* SimpleNet_Demo\project.properties
+* SimpleNet_Demo\res\
+* SimpleNet_Demo\res\drawable-hdpi\
+* SimpleNet_Demo\res\drawable-hdpi\ic_launcher.png
+* SimpleNet_Demo\res\drawable-mdpi\
+* SimpleNet_Demo\res\drawable-mdpi\ic_launcher.png
+* SimpleNet_Demo\res\drawable-xhdpi\
+* SimpleNet_Demo\res\drawable-xhdpi\ic_launcher.png
+* SimpleNet_Demo\res\drawable-xxhdpi\
+* SimpleNet_Demo\res\drawable-xxhdpi\ic_launcher.png
+* SimpleNet_Demo\res\layout\
+* SimpleNet_Demo\res\layout\activity_main.xml
+* SimpleNet_Demo\res\values\
+* SimpleNet_Demo\res\values\strings.xml
+* SimpleNet_Demo\res\values\styles.xml
+* SimpleNet_Demo\src\
+* SimpleNet_Demo\src\com\
+* SimpleNet_Demo\src\com\example\
+* SimpleNet_Demo\src\com\example\simplenet_demo\
+* SimpleNet_Demo\src\com\example\simplenet_demo\MainActivity.java
+* proguard-project.txt
+* simple_net_framework_test\
+* simple_net_framework_test\.classpath
+* simple_net_framework_test\.project
+* simple_net_framework_test\.settings\
+* simple_net_framework_test\.settings\org.eclipse.jdt.core.prefs
+* simple_net_framework_test\AndroidManifest.xml
+* simple_net_framework_test\bin\
+* simple_net_framework_test\bin\jarlist.cache
+* simple_net_framework_test\proguard-project.txt
+* simple_net_framework_test\project.properties
+* simple_net_framework_test\res\
+* simple_net_framework_test\res\drawable-hdpi\
+* simple_net_framework_test\res\drawable-hdpi\ic_launcher.png
+* simple_net_framework_test\res\drawable-ldpi\
+* simple_net_framework_test\res\drawable-ldpi\ic_launcher.png
+* simple_net_framework_test\res\drawable-mdpi\
+* simple_net_framework_test\res\drawable-mdpi\ic_launcher.png
+* simple_net_framework_test\res\drawable-xhdpi\
+* simple_net_framework_test\res\drawable-xhdpi\ic_launcher.png
+* simple_net_framework_test\res\values\
+* simple_net_framework_test\res\values\strings.xml
+* simple_net_framework_test\src\
+* simple_net_framework_test\src\com\
+* simple_net_framework_test\src\com\umeng\
+* simple_net_framework_test\src\com\umeng\network\
+* simple_net_framework_test\src\com\umeng\network\test\
+* simple_net_framework_test\src\com\umeng\network\test\LURCacheTest.java
+* simple_net_framework_test\src\com\umeng\network\test\RequestQueueTest.java
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:18.+
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => simple_net_framework\src\main\AndroidManifest.xml
+* assets\ => simple_net_framework\src\main\assets
+* res\ => simple_net_framework\src\main\res\
+* src\ => simple_net_framework\src\main\java\
+
+Missing Android Support Repository:
+-----------------------------------
+Some useful libraries, such as the Android Support Library, are
+installed from a special Maven repository, which should be installed
+via the SDK manager.
+
+It looks like this library is missing from your SDK installation at:
+null
+
+To install it, open the SDK manager, and in the Extras category,
+select "Android Support Repository". You may also want to install the
+"Google Repository" if you want to use libraries like Google Play
+Services.
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
