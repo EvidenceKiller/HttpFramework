@@ -32,7 +32,10 @@ public class HttpUrlConnStack implements HttpStack {
 
         HttpURLConnection httpURLConnection = null;
         try {
+            // 构建HttpURLConnection
             httpURLConnection = createUrlConnection(request.getUrl());
+            // 设置Headers
+            setRequestHeaders(httpURLConnection, request);
         }
 
         return null;
