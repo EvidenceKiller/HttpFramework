@@ -4,10 +4,20 @@ import com.zxn.zxn_http.base.Request;
 import com.zxn.zxn_http.base.Response;
 import com.zxn.zxn_http.config.HttpUrlConnConfig;
 
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
+import org.apache.http.message.BasicStatusLine;
+
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Set;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * 使用HttpURLConnection执行网络请求的HttpStack
@@ -36,11 +46,23 @@ public class HttpUrlConnStack implements HttpStack {
             httpURLConnection = createUrlConnection(request.getUrl());
             // 设置Headers
             setRequestHeaders(httpURLConnection, request);
+            // 设置body参数
+            setRequestParams(httpURLConnection, request);
+            // https配置
+            configHttps(request);
+            return fetchResponse(httpURLConnection);
         }
 
         return null;
     }
 
+    /**
+     * 创建URLConnection
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     */
     private HttpURLConnection createUrlConnection(String url) throws IOException {
         URL newUrl = new URL(url);
         URLConnection urlConnection = newUrl.openConnection();
@@ -49,5 +71,71 @@ public class HttpUrlConnStack implements HttpStack {
         urlConnection.setDoInput(true);
         urlConnection.setUseCaches(false);
         return (HttpURLConnection) urlConnection;
+    }
+
+    /**
+     * 设置请求头
+     *
+     * @param httpURLConnection
+     * @param request
+     */
+    private void setRequestHeaders(HttpURLConnection httpURLConnection, Request<?> request) {
+        Set<String> headersKeys = request.getHeaders().keySet();
+        for (String headerName : headersKeys) {
+            httpURLConnection.addRequestProperty(headerName, request.getHeaders().get(headerName));
+        }
+    }
+
+    /**
+     * 设置请求body
+     *
+     * @param httpURLConnection
+     * @param request
+     * @throws ProtocolException
+     * @throws IOException
+     */
+    private void setRequestParams(HttpURLConnection httpURLConnection, Request<?> request) throws ProtocolException, IOException {
+        Request.HttpMethod httpMethod = request.getHttpMethod();
+        httpURLConnection.setRequestMethod(httpMethod.toString());
+        // add params
+        byte[] body = request.getBody();
+        if (body != null) {
+            // enable output
+            httpURLConnection.setDoOutput(true);
+            // set content type
+            httpURLConnection.addRequestProperty(Request.HEADER_CONTENT_TYPE, request.getBodyContentType());
+            // write params data to connection
+            DataOutputStream dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream());
+            dataOutputStream.write(body);
+            dataOutputStream.close();
+        }
+    }
+
+    /**
+     * 配置Https
+     *
+     * @param request
+     */
+    private void configHttps(Request<?> request) {
+        if (request.isHttps()) {
+            SSLSocketFactory sslSocketFactory = config.getSSLSocketFactory();
+            // 配置Https
+            if (sslSocketFactory != null) {
+                HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
+                HttpsURLConnection.setDefaultHostnameVerifier(config.getHostnameVerifier());
+            }
+        }
+    }
+
+    private Response fetchResponse(HttpURLConnection httpURLConnection) throws IOException {
+        // Initialize HttpResponse with data from the HttpURLConnection
+        ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
+        int responseCode = httpURLConnection.getResponseCode();
+        if (responseCode == -1) {
+            throw new IOException("Could not retrieve response code from HttpURLConnection");
+        }
+        StatusLine responseStatus = new BasicStatusLine(protocolVersion, httpURLConnection.getResponseCode(), httpURLConnection.getResponseMessage());
+        // 构建response
+        Response
     }
 }
