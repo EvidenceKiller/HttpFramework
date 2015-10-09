@@ -4,16 +4,23 @@ import com.zxn.zxn_http.base.Request;
 import com.zxn.zxn_http.base.Response;
 import com.zxn.zxn_http.config.HttpUrlConnConfig;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -51,8 +58,13 @@ public class HttpUrlConnStack implements HttpStack {
             // https配置
             configHttps(request);
             return fetchResponse(httpURLConnection);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
         }
-
         return null;
     }
 
@@ -127,6 +139,13 @@ public class HttpUrlConnStack implements HttpStack {
         }
     }
 
+    /**
+     * 取响应
+     *
+     * @param httpURLConnection
+     * @return
+     * @throws IOException
+     */
     private Response fetchResponse(HttpURLConnection httpURLConnection) throws IOException {
         // Initialize HttpResponse with data from the HttpURLConnection
         ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
@@ -136,6 +155,49 @@ public class HttpUrlConnStack implements HttpStack {
         }
         StatusLine responseStatus = new BasicStatusLine(protocolVersion, httpURLConnection.getResponseCode(), httpURLConnection.getResponseMessage());
         // 构建response
-        Response
+        Response response = new Response(responseStatus);
+        // 设置response数据
+        response.setEntity(entityFromURLConnection(httpURLConnection));
+        addHeadersToResponse(response, httpURLConnection);
+        return response;
+    }
+
+    /**
+     * 执行http请求之后返回的数据流，返回请求的结果
+     *
+     * @param httpURLConnection
+     * @return
+     */
+    private HttpEntity entityFromURLConnection(HttpURLConnection httpURLConnection) {
+        BasicHttpEntity entity = new BasicHttpEntity();
+        InputStream inputStream = null;
+        try {
+            httpURLConnection.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            inputStream = httpURLConnection.getErrorStream();
+        }
+
+        entity.setContent(inputStream);
+        entity.setContentLength(httpURLConnection.getContentLength());
+        entity.setContentEncoding(httpURLConnection.getContentEncoding());
+        entity.setContentType(httpURLConnection.getContentType());
+
+        return entity;
+    }
+
+    /**
+     * 为响应添加headers
+     *
+     * @param response
+     * @param httpURLConnection
+     */
+    private void addHeadersToResponse(Response response, HttpURLConnection httpURLConnection) {
+        for (Map.Entry<String, List<String>> header : httpURLConnection.getHeaderFields().entrySet()) {
+            if (header.getKey() != null) {
+                Header h = new BasicHeader(header.getKey(), header.getValue().get(0));
+                response.addHeader(h);
+            }
+        }
     }
 }
