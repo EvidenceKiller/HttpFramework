@@ -114,6 +114,12 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      */
     private Map<String, String> bodyParams = new HashMap<String, String>();
 
+    public Request(HttpMethod method, String url, RequestListener<T> listener) {
+        httpMethod = method;
+        this.url = url;
+        requestListener = listener;
+    }
+
     /**
      * 添加头
      *
