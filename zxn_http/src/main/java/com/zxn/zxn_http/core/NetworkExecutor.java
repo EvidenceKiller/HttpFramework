@@ -1,5 +1,7 @@
 package com.zxn.zxn_http.core;
 
+import android.util.Log;
+
 import com.zxn.zxn_http.base.Request;
 import com.zxn.zxn_http.base.Response;
 import com.zxn.zxn_http.cache.Cache;
@@ -41,6 +43,70 @@ public class NetworkExecutor extends Thread {
     * 是否停止
     */
    private boolean isStop = false;
+
+   public NetworkExecutor(BlockingQueue<Request<?>> queue, HttpStack httpStack) {
+      this.requestQueue = queue;
+      this.httpStack = httpStack;
+   }
+
+   /**
+    *
+    */
+   @Override
+   public void run() {
+      try {
+         while (!isStop) {
+            final Request<?> request = requestQueue.take();
+            if (request.isCanceled()) {
+               Log.d("###", "### request is canceled");
+               continue;
+            }
+
+            Response response = null;
+            if (isUseCache(request)) {
+               // 从缓存中读取
+               response = cache.get(request.getUrl());
+            } else {
+               // 从网络上获取
+               response = httpStack.performRequest(request);
+               // 如果该请求需要缓存，那么请求成功则缓存到responseCache中
+               if (request.shouldCache() && isSuccess(response)) {
+                  cache.put(request.getUrl(), response);
+               }
+            }
+
+            // 分发请求结果
+            responseDelivery.deliveryResponse(request, response);
+         }
+      } catch (InterruptedException e) {
+         Log.e("", "### delivery response exit");
+      }
+   }
+
+   /**
+    * 判断请求是否成功
+    *
+    * @param response
+    * @return
+    */
+   private boolean isSuccess(Response response) {
+      return response != null && response.getStatusCode() == 200;
+   }
+
+   /**
+    * 判断本地是否存在缓存
+    *
+    * @param request
+    * @return
+    */
+   private boolean isUseCache(Request<?> request) {
+      return request.shouldCache() && cache.get(request.getUrl()) != null;
+   }
+
+   public void quit() {
+      isStop = true;
+      interrupt();
+   }
 
 
 }

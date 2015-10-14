@@ -201,6 +201,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return url.startsWith("https");
     }
 
+    public boolean shouldCache() {
+        return shouldCache;
+    }
+
     public void setShouldCache(boolean shouldCache) {
         this.shouldCache = shouldCache;
     }
