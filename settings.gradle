@@ -1,2 +1,1 @@
 include ':app', ':zxn_http', 'volley'
-include ':simple_net_framework'

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HttpFramework.iml" filepath="$PROJECT_DIR$/HttpFramework.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simple_net_framework/simple_net_framework.iml" filepath="$PROJECT_DIR$/simple_net_framework/simple_net_framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/volley/volley.iml" filepath="$PROJECT_DIR$/volley/volley.iml" />
       <module fileurl="file://$PROJECT_DIR$/zxn_http/zxn_http.iml" filepath="$PROJECT_DIR$/zxn_http/zxn_http.iml" />
     </modules>
